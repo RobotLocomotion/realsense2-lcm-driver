@@ -96,8 +96,8 @@ void build_lcm_image_message(const cv::Mat& image_mat, int expected_mat_type,
     throw std::runtime_error("Unexpected image type in LcmRgbdPublisher");
   }
 
-  image->width = image_mat.rows;
-  image->height = image_mat.cols;
+  image->height = image_mat.rows;
+  image->width = image_mat.cols;
 
   // Drake uses FLOAT32 for depth messages, but since we're
   // already in UINT16 just stay there.
@@ -113,6 +113,28 @@ void build_lcm_image_message(const cv::Mat& image_mat, int expected_mat_type,
     }
     case robotlocomotion::image_t::COMPRESSION_METHOD_JPEG: {
       cv::imencode(".jpg", image_mat, image->data);
+      break;
+    }
+    case robotlocomotion::image_t::COMPRESSION_METHOD_ZLIB: {
+      const int source_size =
+          image->width * image->height * image_mat.elemSize();
+
+      // The destination buf_size must be slightly larger than the source
+      // size.
+      // http://refspecs.linuxbase.org/LSB_3.0.0/LSB-PDA/LSB-PDA/zlib-compress2-1.html
+      size_t buf_size = source_size * 1.001 + 12;
+      std::unique_ptr<uint8_t[]> buf(new uint8_t[buf_size]);
+
+      auto compress_status = compress2(
+          buf.get(), &buf_size,
+          reinterpret_cast<const Bytef*>(image_mat.ptr()),
+          source_size, Z_BEST_SPEED);
+      if (compress_status != Z_OK) {
+        throw std::runtime_error("zlib compression failed");
+      }
+
+      image->data.resize(buf_size);
+      memcpy(&image->data[0], buf.get(), buf_size);
       break;
     }
   }
@@ -167,7 +189,7 @@ void LcmRgbdPublisher::PublishImages() {
             image_mat, CV_16UC1, false,
             robotlocomotion::image_t::PIXEL_FORMAT_DEPTH,
             robotlocomotion::image_t::CHANNEL_TYPE_UINT16,
-            robotlocomotion::image_t::COMPRESSION_METHOD_PNG, &image);
+            robotlocomotion::image_t::COMPRESSION_METHOD_ZLIB, &image);
         if (enabled_software_registration_) {
           depth_image = img;
         }
@@ -181,7 +203,7 @@ void LcmRgbdPublisher::PublishImages() {
             // TODO(duy): It should be float but why float does
             // not work with Linemod?
             robotlocomotion::image_t::CHANNEL_TYPE_UINT16,
-            robotlocomotion::image_t::COMPRESSION_METHOD_PNG, &image);
+            robotlocomotion::image_t::COMPRESSION_METHOD_ZLIB, &image);
         break;
       }
       case ImageType::IR:
