@@ -1,0 +1,24 @@
+package rs2_lcm;
+
+// Structure holding a (semantic) description of a serialized image
+// (or channel).
+struct image_description_t {
+  // The name of a frame this description is associated with.
+  string frame_name;
+
+  int8_t type;
+
+  intrinsics_t intrinsics;
+
+  int8_t num_extrinsics;
+  extrinsics_t extrinsics[num_extrinsics];
+
+  // enum for image type
+  const int8_t RGB = 0;
+  const int8_t DEPTH = 1;
+  const int8_t IR = 2;
+  const int8_t IR_STEREO = 3;
+  const int8_t RECT_RGB = 4;
+  const int8_t RECT_RGB_ALIGNED_DEPTH = 5;
+  const int8_t DEPTH_ALIGNED_RGB = 6;
+}

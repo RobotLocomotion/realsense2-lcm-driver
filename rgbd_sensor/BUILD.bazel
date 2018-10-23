@@ -1,0 +1,111 @@
+# -*- mode: python -*-
+# vi: set ft=python :
+
+load("//tools/lint:lint.bzl", "add_lint_tests")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "intrinsics",
+    srcs = ["intrinsics.cc"],
+    hdrs = ["intrinsics.h"],
+    deps = [
+        "@eigen",
+    ],
+)
+
+cc_library(
+    name = "rgbd_sensor",
+    srcs = [
+        "image.cc",
+        "rgbd_sensor.cc",
+    ],
+    hdrs = [
+        "image.h",
+        "rgbd_sensor.h",
+    ],
+    deps = [
+        ":intrinsics",
+        "@boost//:boost_headers",
+        "@drake//common:essential",
+        "@opencv",
+    ],
+)
+
+cc_library(
+    name = "lcm_related",
+    srcs = [
+        "lcm_rgbd_common.cc",
+        "lcm_rgbd_publisher.cc",
+    ],
+    hdrs = [
+        "lcm_rgbd_common.h",
+        "lcm_rgbd_publisher.h",
+    ],
+    deps = [
+        ":rgbd_sensor",
+        "//lcmtypes:lcmtypes_rs2_cc",
+        "@drake//common:essential",
+        "@lcm",
+        "@lcmtypes_robotlocomotion",
+        "@zlib",
+    ],
+)
+
+cc_library(
+    name = "real_sense_common",
+    srcs = [
+    ],
+    hdrs = [
+        "real_sense_common.h",
+    ],
+    deps = [
+        ":rgbd_sensor",
+    ],
+)
+
+cc_library(
+    name = "real_sense_d400",
+    srcs = [
+        "real_sense_d400.cc",
+    ],
+    hdrs = [
+        "real_sense_d400.h",
+    ],
+    data = [
+        "//cfg:realsense",
+    ],
+    deps = [
+        ":real_sense_common",
+        ":rgbd_sensor",
+        "@drake//common:essential",
+        "@drake//common:scoped_singleton",
+        "@realsense2",
+    ],
+)
+
+cc_binary(
+    name = "realsense_rgbd_publisher",
+    srcs = [
+        "realsense_rgbd_publisher.cc",
+    ],
+    deps = [
+        ":lcm_related",
+        ":real_sense_d400",
+        "@boost//:boost_headers",
+        "@boost//:boost_system",
+        "@drake//common:text_logging_gflags",
+        "@gflags",
+    ],
+)
+
+cc_test(
+    name = "image_test",
+    srcs = ["test/image_test.cc"],
+    deps = [
+        ":rgbd_sensor",
+        "@gtest//:main",
+    ],
+)
+
+add_lint_tests()

@@ -1,0 +1,13 @@
+# -*- mode: python -*-
+# vi: set ft=python :
+
+load("//tools/lint:lint.bzl", "add_lint_tests")
+
+exports_files(glob(["*.py"]))
+
+add_lint_tests(
+    # This file is a fork from Driving, whose linting standards are less
+    # strict.  Rather that reformatting the file and making merges harder,
+    # we instead turn off our linters for it.
+    bazel_lint_exclude = ["opencv.bzl"],
+)

@@ -1,0 +1,23 @@
+package rs2_lcm;
+
+// A representation of camera intrinsics.
+struct intrinsics_t {
+  int32_t width;
+  int32_t height;
+
+  float focal_length_x;
+  float focal_length_y;
+  float principal_point_x;
+  float principal_point_y;
+
+  int8_t distortion_model;
+
+  float distortion_coeffs[5];
+
+  // enum for distortion model
+  const int8_t DISTORTION_NONE = 0;
+  const int8_t DISTORTION_MODIFIED_BROWN_CONRADY = 1;
+  const int8_t DISTORTION_INVERSE_BROWN_CONRADY = 2;
+  const int8_t DISTORTION_FTHETA = 3;
+  const int8_t DISTORTION_BROWN_CONRADY = 4;
+}

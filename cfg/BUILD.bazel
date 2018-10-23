@@ -1,0 +1,15 @@
+# -*- mode: python -*-
+# vi: set ft=python :
+
+load("//tools/lint:lint.bzl", "add_lint_tests")
+
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "realsense",
+    srcs = glob([
+        "d4*_*.json",
+    ]),
+)
+
+add_lint_tests()

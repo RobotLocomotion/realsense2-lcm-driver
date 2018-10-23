@@ -1,0 +1,14 @@
+package rs2_lcm;
+
+// A representation of image-to-image extrinsics for a particular
+// camera.
+struct extrinsics_t {
+
+  // Uses image type enum from image_description_t.
+  int8_t image_from;
+  int8_t image_to;
+
+  // Column-major rotation matrix.
+  float rotation[9];
+  float translation[3];
+}

@@ -1,0 +1,224 @@
+# -*- python -*-
+# Copyright 2016-2018 Toyota Research Institute.  All rights reserved.
+
+# NOTE: See opencv.bzl for instructions for upgrading opencv version.
+
+load(
+    "@//tools/workspace/opencv:opencv.bzl",
+    "opencv_all",
+    "opencv_base",
+    "opencv_module",
+    "opencv_python",
+)
+
+py_binary(
+    name = "opencv_clmake",
+    srcs = ["@//tools/workspace/opencv:opencv_clmake.py"],
+)
+
+py_binary(
+    name = "opencv_optimizations",
+    srcs = ["@//tools/workspace/opencv:opencv_optimizations.py"],
+)
+
+# TODO(jeremy.nimmer@tri.global) Enable this in a follow-up PR.
+USE_CUDA = False
+
+CONFIG = {
+    "opts": ["SSE2"],
+    # For annoying reasons, this list of modules must be kept in sync
+    # with the created modules down below.
+    "modules": [
+        "cudev",
+        "core",
+        "imgproc",
+        "imgcodecs",
+        "video",
+        "objdetect",
+        "ml",
+        "flann",
+        "features2d",
+        "calib3d",
+    ] + [x for x in [
+        "cudaarithm",
+        "cudaimgproc",
+        "cudawarping",
+        "cudaobjdetect",
+    ] if USE_CUDA],
+}
+
+opencv_base(
+    CONFIG,
+    use_cuda = USE_CUDA,
+)
+
+opencv_module(
+    name = "cudev",
+    config = CONFIG,
+    srcs_excludes = [
+        "modules/cudev/src/stub.cpp",
+    ],
+)
+
+opencv_module(
+    name = "core",
+    config = CONFIG,
+    cuda = USE_CUDA,
+    linkopts = ["-ldl"],
+    opencl = True,
+    simd_sources = {
+        "stat": ["SSE2"],
+        "mathfuncs_core": ["SSE2"],
+    },
+    textual_hdrs = [":version_string"],
+    deps = [":cudev"],
+)
+
+opencv_module(
+    name = "imgproc",
+    config = CONFIG,
+    opencl = True,
+    simd_sources = {
+        "accum": ["SSE2"],
+    },
+    deps = [":core"],
+)
+
+opencv_module(
+    name = "imgcodecs",
+    config = CONFIG,
+    srcs_excludes = [
+        "modules/imgcodecs/src/grfmt_exr.cpp",
+    ],
+    deps = [
+        ":imgproc",
+        "@libjpeg",
+        "@libpng",
+        "@libtiff",
+    ],
+)
+
+opencv_module(
+    name = "video",
+    config = CONFIG,
+    opencl = True,
+    deps = [
+        ":core",
+        ":imgproc",
+    ],
+)
+
+opencv_module(
+    name = "objdetect",
+    config = CONFIG,
+    opencl = True,
+    deps = [
+        ":core",
+        ":imgproc",
+    ],
+)
+
+opencv_module(
+    name = "ml",
+    config = CONFIG,
+    deps = [":core"],
+)
+
+opencv_module(
+    name = "flann",
+    config = CONFIG,
+    deps = [":core"],
+)
+
+opencv_module(
+    name = "features2d",
+    config = CONFIG,
+    opencl = True,
+    deps = [
+        ":core",
+        ":flann",
+        ":imgproc",
+    ],
+)
+
+opencv_module(
+    name = "calib3d",
+    config = CONFIG,
+    opencl = True,
+    deps = [
+        ":core",
+        ":features2d",
+    ],
+)
+
+opencv_module(
+    name = "cudaarithm",
+    config = CONFIG,
+    copts = [
+        "-Wno-unused-function",
+    ],
+    cuda = True,
+    deps = [":core"],
+) if USE_CUDA else None
+
+opencv_module(
+    name = "cudaimgproc",
+    config = CONFIG,
+    cuda = True,
+    deps = [
+        ":core",
+        ":cudaarithm",
+        ":imgproc",
+    ],
+) if USE_CUDA else None
+
+opencv_module(
+    name = "cudawarping",
+    config = CONFIG,
+    cuda = True,
+    deps = [
+        ":core",
+        ":imgproc",
+    ],
+) if USE_CUDA else None
+
+opencv_module(
+    name = "cudaobjdetect",
+    config = CONFIG,
+    cuda = True,
+    deps = [
+        ":core",
+        ":cudaarithm",
+        ":cudawarping",
+        ":objdetect",
+    ],
+) if USE_CUDA else None
+
+opencv_python(
+    name = "python",
+    config = CONFIG,
+    modules = [
+        "calib3d",
+        "core",
+        "features2d",
+        "flann",
+        "imgproc",
+        "imgcodecs",
+    ],
+    runtime_deps_modules = [
+        "cudev",
+    ],
+)
+
+# You probably shouldn't use this rule, but some things _really_ want
+# to include "opencv.hpp"
+opencv_all(
+    name = "all",
+    config = CONFIG,
+)
+
+alias(
+    name = "opencv",
+    actual = ":all",
+    visibility = ["//visibility:public"],
+)

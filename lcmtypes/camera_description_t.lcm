@@ -1,0 +1,18 @@
+package rs2_lcm;
+
+// A message describing a specific camera and the image types it's
+// expected to produce.
+//
+// TODO(sam.creasey) This may be overfit to the specific
+// implementation originally consuming it.
+struct camera_description_t {
+  // Unique string identifying this camera.
+  string camera_name;
+
+  // Number of image types supported.
+  int8_t num_image_types;
+  image_description_t image_types[num_image_types];
+
+  // LCM channel this camera is transmitting on
+  string lcm_channel_name;
+}

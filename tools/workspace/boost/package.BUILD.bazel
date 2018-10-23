@@ -1,0 +1,85 @@
+# -*- mode: python -*-
+# vi: set ft=python :
+
+package(default_visibility = ["//visibility:public"])
+
+licenses(["notice"])  # BSL-1.0
+
+cc_library(
+    name = "boost_headers",
+    hdrs = glob([
+        "boost/**/*.h",
+        "boost/**/*.hpp",
+        "boost/**/*.ipp",
+    ]),
+    includes = ["."],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "boost",
+    deps = [
+        "boost_date_time",
+        "boost_filesystem",
+        "boost_iostreams",
+        "boost_program_options",
+        "boost_serialization",
+        "boost_system",
+        "boost_thread",
+        "boost_timer",
+    ],
+)
+
+cc_library(
+    name = "boost_date_time",
+    linkopts = ["-lboost_date_time"],
+    deps = ["@boost//:boost_headers"],
+)
+
+cc_library(
+    name = "boost_filesystem",
+    linkopts = ["-lboost_filesystem"],
+    deps = ["@boost//:boost_headers"],
+)
+
+cc_library(
+    name = "boost_iostreams",
+    linkopts = ["-lboost_iostreams"],
+    deps = ["@boost//:boost_headers"],
+)
+
+cc_library(
+    name = "boost_python",
+    linkopts = ["-lboost_python"],
+    deps = ["@boost//:boost_headers"],
+)
+
+cc_library(
+    name = "boost_program_options",
+    linkopts = ["-lboost_program_options"],
+    deps = ["@boost//:boost_headers"],
+)
+
+cc_library(
+    name = "boost_serialization",
+    linkopts = ["-lboost_serialization"],
+    deps = ["@boost//:boost_headers"],
+)
+
+cc_library(
+    name = "boost_system",
+    linkopts = ["-lboost_system"],
+    deps = ["@boost//:boost_headers"],
+)
+
+cc_library(
+    name = "boost_thread",
+    linkopts = ["-lboost_thread"],
+    deps = ["@boost//:boost_headers"],
+)
+
+cc_library(
+    name = "boost_timer",
+    linkopts = ["-lboost_timer"],
+    deps = ["@boost//:boost_headers"],
+)

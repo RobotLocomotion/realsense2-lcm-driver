@@ -1,0 +1,4 @@
+/bazel-*
+bazel.log
+core
+*~
