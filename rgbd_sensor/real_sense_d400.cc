@@ -148,6 +148,7 @@ RealSenseD400::RealSenseD400(int camera_id, bool use_high_res,
 }
 
 void RealSenseD400::LoadJsonConfig(const std::string& json_path) {
+  drake::log()->debug("Loading config from {}", json_path);
   if (camera_.is<rs400::advanced_mode>()) {
     std::ifstream config_stream;
     config_stream.open(json_path);

@@ -41,8 +41,6 @@ namespace {
 int RunRgbdPublisher(const std::vector<std::unique_ptr<RGBDSensor>>& devices,
                      const std::vector<ImageType>& image_types,
                      ImageType depth_type, bool request_software_registration) {
-  drake::logging::HandleSpdlogGflags();
-
   drake::log()->info("Request software depth registration: {}",
                      request_software_registration);
 
@@ -156,5 +154,6 @@ int DoMain() {
 
 int main(int argc, char** argv) {
   gflags::ParseCommandLineFlags(&argc, &argv, true);
+  drake::logging::HandleSpdlogGflags();
   return rs2_lcm::DoMain();
 }
