@@ -28,14 +28,14 @@ def realsense2_repository(
             "http://realsense-hw-public.s3.amazonaws.com/Debian/apt-repo/pool/xenial/main/libr/librealsense2",  # noqa
         ],
         filenames = [
-            "librealsense2_2.10.3-0~realsense0.66_amd64.deb",
-            "librealsense2-dev_2.10.3-0~realsense0.66_amd64.deb",
-            "librealsense2-udev-rules_2.10.3-0~realsense0.66_amd64.deb",
+            "librealsense2_2.16.1-0~realsense0.88_amd64.deb",
+            "librealsense2-dev_2.16.1-0~realsense0.88_amd64.deb",
+            "librealsense2-udev-rules_2.16.1-0~realsense0.88_amd64.deb",
         ],
         sha256s = [
-            "e0149de58e7c8fe8e4ec27c530b53b263427dc6dc7c72698a991004ce8dd88c6",
-            "ba31b0bafe8c22b64a0daa81e7efb6b278580f4959d1d81ae74659f68bf682da",
-            "62d5c0a8a0957fb4f6d3fe02d3f38402564e14f12ae4ac8310046ccf2dd9a467",
+            "7bc7c3835f46c3e2519801fb2b04c10123b8ac8b2fe4e682686ce09d849431b7",
+            "3a8b14907b93df5239233cc79bcb56cf44f1683d8b306f51397797b459f573b2",
+            "21ae912363597edf5ee8e1d131e2cdd5f9e8707392e4a6ba2cf8d9c1fe1caf4b",
         ],
         build_file = "//tools/workspace/realsense2:package.BUILD.bazel",
         **kwargs):
