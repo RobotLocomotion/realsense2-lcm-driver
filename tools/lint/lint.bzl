@@ -1,11 +1,8 @@
 # -*- python -*-
 
-load(
-    "@drake//tools/lint:lint.bzl",
-    drake_bazel_lint = "bazel_lint",
-    drake_cpplint = "cpplint",
-    drake_pylint = "python_lint",
-)
+load("@drake//tools/lint:bazel_lint.bzl", drake_bazel_lint = "bazel_lint")
+load("@drake//tools/lint:cpplint.bzl", drake_cpplint = "cpplint")
+load("@drake//tools/lint:python_lint.bzl", drake_pylint = "python_lint")
 
 def add_lint_tests(
         cpplint_data = None,

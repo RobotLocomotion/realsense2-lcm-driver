@@ -204,10 +204,22 @@ opencv_python(
         "flann",
         "imgproc",
         "imgcodecs",
+        "highgui",
+        "video",
     ],
     runtime_deps_modules = [
         "cudev",
+        "videoio",
     ],
+)
+
+# Only use this if you're using OpenCV Python / C++ interop (e.g.
+# `cv2_pybind`).
+cc_library(
+    name = "pycompat_headers",
+    hdrs = ["modules/python/src2/pycompat.hpp"],
+    includes = ["modules/python/src2"],
+    visibility = ["//visibility:public"],
 )
 
 # You probably shouldn't use this rule, but some things _really_ want

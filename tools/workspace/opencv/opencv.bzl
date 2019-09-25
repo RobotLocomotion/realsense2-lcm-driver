@@ -25,18 +25,16 @@ Implements the OpenCV build system for bazel.
 #    you can use //program/opencv_validation to verify through manual
 #    inspection that they are being activated correctly.
 
-KNOWN_OPTIMIZATIONS = depset(
-    [
-        "SSE1",
-        "SSE2",
-        "SSE3",
-        "SSE4_1",
-        "SSE4_2",
-        "AVX",
-        "AVX2",
-        "FP16",
-    ],
-)
+KNOWN_OPTIMIZATIONS = [
+    "SSE1",
+    "SSE2",
+    "SSE3",
+    "SSE4_1",
+    "SSE4_2",
+    "AVX",
+    "AVX2",
+    "FP16",
+]
 
 # The following options are used to build the OpenCV libraries.  They
 # should not be exported to consumer software.
@@ -464,9 +462,10 @@ def opencv_module(
         simd_outs.append(declaration_file)
 
         available_optimizations = simd_sources[simd_source]
-        this_file_optimizations = list(depset(enabled_optimizations).union(
+        this_file_optimizations = depset(transitive = [
+            depset(enabled_optimizations),
             depset(available_optimizations),
-        ))
+        ]).to_list()
 
         cpp_outs = []
         for opt in this_file_optimizations:
@@ -721,7 +720,7 @@ EOF
             "modules/python/src2/gen2.py",
             "modules/python/src2/hdr_parser.py",
         ],
-        cmd = "cd external/opencv && python2 ../../$(location :modules/python/src2/gen2.py) ../../$(GENDIR)/external/opencv ../../$(location :python_gen_headers)",
+        cmd = "cd external/opencv && /usr/bin/python3 ../../$(location :modules/python/src2/gen2.py) ../../$(GENDIR)/external/opencv ../../$(location :python_gen_headers)",
     )
 
     native.genrule(

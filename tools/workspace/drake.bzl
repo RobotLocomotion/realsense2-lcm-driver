@@ -1,6 +1,11 @@
 # -*- mode: python -*-
 # vi: set ft=python :
 
+load(
+    "@bazel_tools//tools/build_defs/repo:http.bzl",
+    "http_archive",
+)
+
 # ================ USING A GITHUB COPY OF DRAKE ================
 
 # Specify which revision of Drake to use.
@@ -13,16 +18,11 @@
 # 5. Run `bazel build`; it should successfully download now.
 #
 (DRAKE_COMMIT, DRAKE_CHECKSUM) = (
-    "fea9eab13ce2a7049a8e8cbbabd2c70ced2e4855",
-    "29833f94d3da486a7137d9fe5d571f820d206647b3487bd269e3e2795bcede5c",
+    "0303727239528f1c2c075252681fdfd1e5da9362",
+    "40c19927d3bda3143b61b5db6f55f61aa55e137156745997793532378c067a73",
 )
 
 # ================ IMPLEMENTATION DETAILS ================
-
-load(
-    "@bazel_tools//tools/build_defs/repo:http.bzl",
-    "http_archive",
-)
 
 def drake_repository():
     # Download a specific commit of Drake, from github.

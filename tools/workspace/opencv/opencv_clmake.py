@@ -17,7 +17,7 @@ import os
 # Rather than escape every possibly bad C++ thing, we just hex encode
 # the entire contents of the CL file for inclusion.
 def hexify(data):
-    return ":".join([c.encode("hex") for c in data])
+    return ":".join([bytes([c]).hex() for c in data])
 
 
 def main():
