@@ -6,6 +6,9 @@ build --force_pic
 build --strip=never
 build --strict_system_includes
 
+# To address https://github.com/bazelbuild/bazel/issues/8706
+build --incompatible_disable_nocopts=false
+
 # Require the return value of certain functions to be checked.
 build --copt=-Werror=unused-result
 
