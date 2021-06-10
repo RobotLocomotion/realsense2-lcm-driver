@@ -25,7 +25,7 @@ def realsense2_repository(
         # TODO(jeremy.nimmer@tri.global) Ideally we'd mate this mirrors list
         # with the mirrors.bzl design, once we are using that.
         realsense_mirrors = [
-            "http://realsense-hw-public.s3.amazonaws.com/Debian/apt-repo/pool/bionic/main",  # noqa
+            "https://librealsense.intel.com/Debian/apt-repo/pool/bionic/main",  # noqa
         ],
         filenames = [
             "librealsense2_2.28.1-0~realsense0.1554_amd64.deb",
