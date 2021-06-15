@@ -103,16 +103,19 @@ RealSenseD400::RealSenseD400(int camera_id, bool use_high_res,
       camera_name_(camera_.get_info(RS2_CAMERA_INFO_NAME)),
       serial_number_(camera_.get_info(RS2_CAMERA_INFO_SERIAL_NUMBER)),
       use_high_res_(use_high_res) {
+  const bool is_d435 = camera_name_ == "Intel RealSense D435"
+    || camera_name_ == "Intel RealSense D435I";
+
   if (camera_name_ == "Intel RealSense D415") {
     LoadJsonConfig(json_config_file.empty() ? "cfg/d415_high_density.json"
                                             : json_config_file);
     post_process_ = true;
-  } else if (camera_name_ == "Intel RealSense D435") {
+  } else if (is_d435) {
     LoadJsonConfig(json_config_file.empty() ? "cfg/d435_medium_density.json"
                                             : json_config_file);
     post_process_ = false;
   } else {
-    throw std::runtime_error(camera_name_ + " is not a D415 or D435");
+    throw std::runtime_error(camera_name_ + " is not a D415 or D435/D435I");
   }
 
   // Get intrinsics and extrinsics for all the supported streams.
@@ -180,7 +183,10 @@ rs2::config RealSenseD400::MakeRealSenseConfig(
     height = 720;
   }
 
-  if (camera_name_ == "Intel RealSense D435" && !use_high_res_) {
+  const bool is_d435 = camera_name_ == "Intel RealSense D435" 
+    || camera_name_ == "Intel RealSense D435I";
+
+  if (is_d435 && !use_high_res_) {
     // Using a smaller width for shorter min range.
     width = 640;
     height = 480;
