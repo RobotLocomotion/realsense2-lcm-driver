@@ -15,7 +15,7 @@ ImageType DescriptionTypeToImageType(int8_t type);
 int8_t ImageTypeToDescriptionType(ImageType type);
 
 /// Convert image type from ImageType to frame_name (as used in
-/// rs2_lcm::image_description_t and robotlocomotion::image_t::header)
+/// rs2_lcm::image_description_t and lcmt_image::header)
 std::string ImageTypeToFrameName(ImageType type);
 ImageType FrameNameToImageType(const std::string& name);
 

@@ -16,6 +16,7 @@ py_binary(
 
 py_binary(
     name = "clang-format-includes",
+    testonly = 1,
     srcs = ["clang_format_includes.py"],
     data = ["//:.clang-format"],
     main = "clang_format_includes.py",

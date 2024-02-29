@@ -5,7 +5,7 @@
 #include <string>
 
 #include <drake/common/text_logging.h>
-#include <drake/common/text_logging_gflags.h>
+// #include <drake/common/text_logging_gflags.h>
 #include <gflags/gflags.h>
 
 #include "rgbd_sensor/lcm_rgbd_common.h"
@@ -154,6 +154,6 @@ int DoMain() {
 
 int main(int argc, char** argv) {
   gflags::ParseCommandLineFlags(&argc, &argv, true);
-  drake::logging::HandleSpdlogGflags();
+  // drake::logging::HandleSpdlogGflags();
   return rs2_lcm::DoMain();
 }
