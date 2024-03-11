@@ -25,17 +25,17 @@ def realsense2_repository(
         # TODO(jeremy.nimmer@tri.global) Ideally we'd mate this mirrors list
         # with the mirrors.bzl design, once we are using that.
         realsense_mirrors = [
-            "https://librealsense.intel.com/Debian/apt-repo/pool/bionic/main",  # noqa
+            "https://librealsense.intel.com/Debian/apt-repo/pool/jammy/main",  # noqa
         ],
         filenames = [
-            "librealsense2_2.28.1-0~realsense0.1554_amd64.deb",
-            "librealsense2-dev_2.28.1-0~realsense0.1554_amd64.deb",
-            "librealsense2-udev-rules_2.28.1-0~realsense0.1554_amd64.deb",
+            "librealsense2_2.54.2-0~realsense.10773_amd64.deb",
+            "librealsense2-dev_2.54.2-0~realsense.10773_amd64.deb",
+            "librealsense2-udev-rules_2.54.2-0~realsense.10773_amd64.deb",
         ],
         sha256s = [
-            "11241508b4bdafcc46c906a8357ea1471d30fd56608745927f9710ea8a85c711",
-            "5d19cc7d2da1aa351fbe7f0abc4ed77d9e37b692ce41583513a263dbb757c7c8",
-            "a1342d6a4a6a483279b2a75646dbe69726c9743236e52ecac45882a1085d0ebc",
+            "7f4289ee0be1cc9476b6def5478c50bcf5e9c928eb700e80372f26a0c90c180a",
+            "56368d0986cba3e7b077dfcc187398c0c93df257a455235fb82665041cb0baaf",
+            "17e372051d5cecbc10b39c137be82117892c6d79b4fb3907b0c844105bcb6abe",
         ],
         build_file = "//tools/workspace/realsense2:package.BUILD.bazel",
         **kwargs):
