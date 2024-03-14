@@ -1,10 +1,11 @@
 #pragma once
 
+#include <array>
 #include <string>
 
+#include "rgbd_sensor/rgbd_sensor.h"
 #include "rs2_lcm/extrinsics_t.hpp"
 #include "rs2_lcm/intrinsics_t.hpp"
-#include "rgbd_sensor/rgbd_sensor.h"
 
 namespace rs2_lcm {
 

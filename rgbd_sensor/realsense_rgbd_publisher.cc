@@ -7,7 +7,6 @@
 #include <drake/common/text_logging.h>
 // #include <drake/common/text_logging_gflags.h>
 #include <gflags/gflags.h>
-
 #include "rgbd_sensor/lcm_rgbd_common.h"
 #include "rgbd_sensor/lcm_rgbd_publisher.h"
 #include "rgbd_sensor/real_sense_d400.h"

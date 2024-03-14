@@ -7,9 +7,9 @@
 #include <drake/common/scoped_singleton.h>
 #include <librealsense2/rs_advanced_mode.hpp>
 #include <librealsense2/rsutil.h>
+#include "rgbd_sensor/real_sense_common.h"
 
 #include "drake/common/text_logging.h"
-#include "rgbd_sensor/real_sense_common.h"
 
 namespace rs2_lcm {
 namespace {
@@ -118,8 +118,7 @@ RealSenseD400::RealSenseD400(int camera_id, bool use_high_res,
     LoadJsonConfig(json_config_file.empty() ? "cfg/d455_medium_density.json"
                                             : json_config_file);
     post_process_ = false;
-  }
-   else {
+  } else {
     throw std::runtime_error(camera_name_ + " is not a D415 or D435/D435I");
   }
 
@@ -188,8 +187,8 @@ rs2::config RealSenseD400::MakeRealSenseConfig(
     height = 720;
   }
 
-  const bool is_d435 = camera_name_ == "Intel RealSense D435" 
-    || camera_name_ == "Intel RealSense D435I";
+  const bool is_d435 = camera_name_ == "Intel RealSense D435" ||
+      camera_name_ == "Intel RealSense D435I";
 
   if (is_d435 && !use_high_res_) {
     // Using a smaller width for shorter min range.

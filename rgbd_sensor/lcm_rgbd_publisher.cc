@@ -2,17 +2,15 @@
 
 #include "sys/time.h"
 
-#include <iostream>
 #include <memory>
 #include <stdexcept>
 
 #include <drake/common/text_logging.h>
-#include <drake/lcmt_image_array.hpp>
 #include <drake/lcmt_image.hpp>
+#include <drake/lcmt_image_array.hpp>
 #include <zlib.h>
-
-#include "rs2_lcm/camera_description_t.hpp"
 #include "rgbd_sensor/lcm_rgbd_common.h"
+#include "rs2_lcm/camera_description_t.hpp"
 
 namespace rs2_lcm {
 
