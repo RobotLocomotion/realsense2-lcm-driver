@@ -191,7 +191,9 @@ rs2::config RealSenseD400::MakeRealSenseConfig(
   const bool is_d435 = camera_name_ == "Intel RealSense D435" ||
       camera_name_ == "Intel RealSense D435I";
 
-  if (is_d435 && !use_high_res_) {
+  const bool is_d455 = camera_name_ == "Intel RealSense D455";
+
+  if ((is_d435 || is_d455) && !use_high_res_) {
     // Using a smaller width for shorter min range.
     width = 640;
     height = 480;

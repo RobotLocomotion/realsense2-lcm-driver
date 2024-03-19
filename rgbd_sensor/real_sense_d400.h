@@ -15,7 +15,7 @@
 namespace rs2_lcm {
 
 /**
- * Only tested to work with D435 and D415 for now.
+ * Only tested to work with D455, D435 and D415 for now.
  *
  * Notes:
  * The depth images and point cloud is set to be post processed by default.
