@@ -47,7 +47,6 @@ cc_library(
         "//lcmtypes:lcmtypes_rs2_cc",
         "@drake//common:essential",
         "@lcm",
-        # "@lcmtypes_robotlocomotion",
         "@drake//lcmtypes:image_array",
         "@zlib",
     ],

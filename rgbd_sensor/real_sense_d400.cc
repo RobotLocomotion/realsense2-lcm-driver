@@ -106,6 +106,7 @@ RealSenseD400::RealSenseD400(int camera_id, bool use_high_res,
   const bool is_d435 = camera_name_ == "Intel RealSense D435"
     || camera_name_ == "Intel RealSense D435I";
   const bool is_d455 = camera_name_ == "Intel RealSense D455";
+
   if (camera_name_ == "Intel RealSense D415") {
     LoadJsonConfig(json_config_file.empty() ? "cfg/d415_high_density.json"
                                             : json_config_file);
@@ -119,7 +120,7 @@ RealSenseD400::RealSenseD400(int camera_id, bool use_high_res,
                                             : json_config_file);
     post_process_ = false;
   } else {
-    throw std::runtime_error(camera_name_ + " is not a D415 or D435/D435I");
+    throw std::runtime_error(camera_name_ + " is not a D415, D435/D435I or D455");
   }
 
   // Get intrinsics and extrinsics for all the supported streams.
