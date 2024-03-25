@@ -43,6 +43,9 @@ OPENCV_COPTS = [
     "-Wno-narrowing",
     "-Wno-unused-function",
     "-Wno-unused-but-set-variable",
+    "-Wno-unused-variable",
+    "-Wno-deprecated-declarations",
+    "-Wno-class-memaccess",
 
     # We need optimization to always be on, or else things won't even
     # compile.
