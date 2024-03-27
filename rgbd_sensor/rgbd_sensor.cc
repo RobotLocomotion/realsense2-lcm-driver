@@ -1,6 +1,6 @@
 #include "rgbd_sensor/rgbd_sensor.h"
-
-#include "drake/common/text_logging.h"
+#include <spdlog/fmt/ostr.h>
+#include <drake/common/text_logging.h>
 
 namespace rs2_lcm {
 

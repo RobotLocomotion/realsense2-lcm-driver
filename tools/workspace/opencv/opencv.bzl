@@ -43,6 +43,9 @@ OPENCV_COPTS = [
     "-Wno-narrowing",
     "-Wno-unused-function",
     "-Wno-unused-but-set-variable",
+    "-Wno-unused-variable",
+    "-Wno-deprecated-declarations",
+    "-Wno-class-memaccess",
 
     # We need optimization to always be on, or else things won't even
     # compile.
@@ -51,7 +54,7 @@ OPENCV_COPTS = [
 
 # The debug symbols for opencv are enormous, and we don't really
 # expect to be debugging it.  Thus, omit them for now.
-NOCOPTS = "^-g$$"
+NOCOPTS = ["^-g$$"]
 
 # These headers are depended upon by many things.
 LOCAL_HEADERS = [
@@ -565,7 +568,7 @@ def opencv_module(
                 "-Iexternal/opencv/modules/{name}/src/cuda".format(name = name),
                 "-Iexternal/opencv/modules/{name}/src".format(name = name),
             ] + OPENCV_COPTS + module_copts,
-            nocopts = NOCOPTS,
+            features = NOCOPTS,
             deps = [
                 ":{name}_headers".format(name = name),
             ] + module_deps,
@@ -587,7 +590,7 @@ def opencv_module(
                 "-DCV_CPU_DISPATCH_MODE={opt}".format(opt = opt.upper()),
                 "-Iexternal/opencv/modules/{name}/src".format(name = name),
             ] + OPENCV_COPTS + module_copts,
-            nocopts = NOCOPTS,
+            features = NOCOPTS,
         )
 
     native.cc_binary(
@@ -622,7 +625,7 @@ def opencv_module(
             "-I$(GENDIR)/external/opencv/modules/{name}".format(name = name),
             "-Iexternal/opencv/modules/{name}/src".format(name = name),
         ] + OPENCV_COPTS + module_copts,
-        nocopts = NOCOPTS,
+        features = NOCOPTS,
         linkshared = 1,
         visibility = ["//visibility:public"],
         **kwargs
@@ -748,7 +751,7 @@ EOF
             "pyopencv_custom_headers.h",
         ] + cv2_generated_hdrs + opencv_userdef_hdrs,
         copts = OPENCV_COPTS,
-        nocopts = NOCOPTS,
+        features = NOCOPTS,
         deps = [":" + module for module in modules] + [
             "@numpy",
             "@python",

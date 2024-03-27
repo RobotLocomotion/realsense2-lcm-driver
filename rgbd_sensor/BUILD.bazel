@@ -47,7 +47,7 @@ cc_library(
         "//lcmtypes:lcmtypes_rs2_cc",
         "@drake//common:essential",
         "@lcm",
-        "@lcmtypes_robotlocomotion",
+        "@drake//lcmtypes:image_array",
         "@zlib",
     ],
 )
@@ -94,7 +94,7 @@ cc_binary(
         ":real_sense_d400",
         "@boost//:boost_headers",
         "@boost//:boost_system",
-        "@drake//common:text_logging_gflags",
+        "@drake//common:essential",
         "@gflags",
     ],
 )

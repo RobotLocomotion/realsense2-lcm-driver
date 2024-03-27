@@ -1,10 +1,11 @@
 #pragma once
 
+#include <array>
 #include <string>
 
+#include "rgbd_sensor/rgbd_sensor.h"
 #include "rs2_lcm/extrinsics_t.hpp"
 #include "rs2_lcm/intrinsics_t.hpp"
-#include "rgbd_sensor/rgbd_sensor.h"
 
 namespace rs2_lcm {
 
@@ -15,7 +16,7 @@ ImageType DescriptionTypeToImageType(int8_t type);
 int8_t ImageTypeToDescriptionType(ImageType type);
 
 /// Convert image type from ImageType to frame_name (as used in
-/// rs2_lcm::image_description_t and robotlocomotion::image_t::header)
+/// rs2_lcm::image_description_t and lcmt_image::header)
 std::string ImageTypeToFrameName(ImageType type);
 ImageType FrameNameToImageType(const std::string& name);
 

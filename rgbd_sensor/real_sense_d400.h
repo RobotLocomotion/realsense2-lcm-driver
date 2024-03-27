@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <atomic>
 #include <map>
 #include <memory>
@@ -9,13 +10,12 @@
 #include <vector>
 
 #include <librealsense2/rs.hpp>
-
 #include "rgbd_sensor/rgbd_sensor.h"
 
 namespace rs2_lcm {
 
 /**
- * Only tested to work with D435 and D415 for now.
+ * Only tested to work with D455, D435 and D415 for now.
  *
  * Notes:
  * The depth images and point cloud is set to be post processed by default.

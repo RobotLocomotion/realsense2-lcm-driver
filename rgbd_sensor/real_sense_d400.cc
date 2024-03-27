@@ -7,9 +7,9 @@
 #include <drake/common/scoped_singleton.h>
 #include <librealsense2/rs_advanced_mode.hpp>
 #include <librealsense2/rsutil.h>
+#include "rgbd_sensor/real_sense_common.h"
 
 #include "drake/common/text_logging.h"
-#include "rgbd_sensor/real_sense_common.h"
 
 namespace rs2_lcm {
 namespace {
@@ -105,6 +105,7 @@ RealSenseD400::RealSenseD400(int camera_id, bool use_high_res,
       use_high_res_(use_high_res) {
   const bool is_d435 = camera_name_ == "Intel RealSense D435"
     || camera_name_ == "Intel RealSense D435I";
+  const bool is_d455 = camera_name_ == "Intel RealSense D455";
 
   if (camera_name_ == "Intel RealSense D415") {
     LoadJsonConfig(json_config_file.empty() ? "cfg/d415_high_density.json"
@@ -114,8 +115,12 @@ RealSenseD400::RealSenseD400(int camera_id, bool use_high_res,
     LoadJsonConfig(json_config_file.empty() ? "cfg/d435_medium_density.json"
                                             : json_config_file);
     post_process_ = false;
+  } else if (is_d455) {
+    LoadJsonConfig(json_config_file.empty() ? "cfg/d455_medium_density.json"
+                                            : json_config_file);
+    post_process_ = false;
   } else {
-    throw std::runtime_error(camera_name_ + " is not a D415 or D435/D435I");
+    throw std::runtime_error(camera_name_ + " is not a D415, D435/D435I or D455");
   }
 
   // Get intrinsics and extrinsics for all the supported streams.
@@ -183,10 +188,12 @@ rs2::config RealSenseD400::MakeRealSenseConfig(
     height = 720;
   }
 
-  const bool is_d435 = camera_name_ == "Intel RealSense D435" 
-    || camera_name_ == "Intel RealSense D435I";
+  const bool is_d435 = camera_name_ == "Intel RealSense D435" ||
+      camera_name_ == "Intel RealSense D435I";
 
-  if (is_d435 && !use_high_res_) {
+  const bool is_d455 = camera_name_ == "Intel RealSense D455";
+
+  if ((is_d435 || is_d455) && !use_high_res_) {
     // Using a smaller width for shorter min range.
     width = 640;
     height = 480;

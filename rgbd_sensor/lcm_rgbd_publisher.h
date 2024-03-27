@@ -5,7 +5,6 @@
 #include <vector>
 
 #include <lcm/lcm-cpp.hpp>
-
 #include "rgbd_sensor/rgbd_sensor.h"
 
 namespace rs2_lcm {

@@ -93,7 +93,7 @@ opencv_module(
     deps = [
         ":imgproc",
         "@libjpeg",
-        "@libpng",
+        "@libpng_internal//:libpng",
         "@libtiff",
     ],
 )

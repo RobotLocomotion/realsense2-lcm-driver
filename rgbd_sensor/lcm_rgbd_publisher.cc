@@ -2,16 +2,15 @@
 
 #include "sys/time.h"
 
-#include <iostream>
 #include <memory>
 #include <stdexcept>
 
 #include <drake/common/text_logging.h>
-#include <robotlocomotion/image_array_t.hpp>
+#include <drake/lcmt_image.hpp>
+#include <drake/lcmt_image_array.hpp>
 #include <zlib.h>
-
-#include "rs2_lcm/camera_description_t.hpp"
 #include "rgbd_sensor/lcm_rgbd_common.h"
+#include "rs2_lcm/camera_description_t.hpp"
 
 namespace rs2_lcm {
 
@@ -82,7 +81,7 @@ namespace {
 
 void build_lcm_image_header(int32_t sequence, int64_t timestamp,
                             const std::string& frame_name,
-                            robotlocomotion::image_t* image) {
+                            drake::lcmt_image* image) {
   image->header.seq = sequence;
   image->header.utime = timestamp;
   image->header.frame_name = frame_name;
@@ -91,7 +90,7 @@ void build_lcm_image_header(int32_t sequence, int64_t timestamp,
 void build_lcm_image_message(const cv::Mat& image_mat, int expected_mat_type,
                              bool bigendian, int8_t pixel_format,
                              int8_t channel_type, int8_t compression_method,
-                             robotlocomotion::image_t* image) {
+                             drake::lcmt_image* image) {
   if (image_mat.type() != expected_mat_type) {
     throw std::runtime_error("Unexpected image type in LcmRgbdPublisher");
   }
@@ -107,15 +106,15 @@ void build_lcm_image_message(const cv::Mat& image_mat, int expected_mat_type,
   image->channel_type = channel_type;
   image->compression_method = compression_method;
   switch (compression_method) {
-    case robotlocomotion::image_t::COMPRESSION_METHOD_PNG: {
+    case drake::lcmt_image::COMPRESSION_METHOD_PNG: {
       cv::imencode(".png", image_mat, image->data);
       break;
     }
-    case robotlocomotion::image_t::COMPRESSION_METHOD_JPEG: {
+    case drake::lcmt_image::COMPRESSION_METHOD_JPEG: {
       cv::imencode(".jpg", image_mat, image->data);
       break;
     }
-    case robotlocomotion::image_t::COMPRESSION_METHOD_ZLIB: {
+    case drake::lcmt_image::COMPRESSION_METHOD_ZLIB: {
       const int source_size =
           image->width * image->height * image_mat.elemSize();
 
@@ -149,7 +148,7 @@ void LcmRgbdPublisher::PublishImages() {
   uint64_t utime = (tv.tv_sec * 1000000) + tv.tv_usec;
 
   std::shared_ptr<const RawImageData> depth_image, color_image;
-  robotlocomotion::image_array_t images{};
+  drake::lcmt_image_array images{};
   images.header.seq = seq_++;
   images.header.utime = utime;
   uint64_t timestamp = 0;
@@ -164,8 +163,8 @@ void LcmRgbdPublisher::PublishImages() {
       continue;
     }
 
-    images.images.push_back(robotlocomotion::image_t());
-    robotlocomotion::image_t& image = images.images.back();
+    images.images.push_back(drake::lcmt_image());
+    drake::lcmt_image& image = images.images.back();
 
     build_lcm_image_header(image_seq_.at(type), timestamp,
                            ImageTypeToFrameName(type), &image);
@@ -177,9 +176,9 @@ void LcmRgbdPublisher::PublishImages() {
         cv::Mat bgr_mat;
         cv::cvtColor(rgb_mat, bgr_mat, CV_RGB2BGR);
         build_lcm_image_message(
-            bgr_mat, CV_8UC3, false, robotlocomotion::image_t::PIXEL_FORMAT_RGB,
-            robotlocomotion::image_t::CHANNEL_TYPE_UINT8,
-            robotlocomotion::image_t::COMPRESSION_METHOD_JPEG, &image);
+            bgr_mat, CV_8UC3, false, drake::lcmt_image::PIXEL_FORMAT_RGB,
+            drake::lcmt_image::CHANNEL_TYPE_UINT8,
+            drake::lcmt_image::COMPRESSION_METHOD_JPEG, &image);
         color_image = img;
         break;
       }
@@ -187,9 +186,9 @@ void LcmRgbdPublisher::PublishImages() {
         cv::Mat image_mat = img->MakeCvImage(CV_16UC1);
         build_lcm_image_message(
             image_mat, CV_16UC1, false,
-            robotlocomotion::image_t::PIXEL_FORMAT_DEPTH,
-            robotlocomotion::image_t::CHANNEL_TYPE_UINT16,
-            robotlocomotion::image_t::COMPRESSION_METHOD_ZLIB, &image);
+            drake::lcmt_image::PIXEL_FORMAT_DEPTH,
+            drake::lcmt_image::CHANNEL_TYPE_UINT16,
+            drake::lcmt_image::COMPRESSION_METHOD_ZLIB, &image);
         if (enabled_software_registration_) {
           depth_image = img;
         }
@@ -199,11 +198,11 @@ void LcmRgbdPublisher::PublishImages() {
         cv::Mat image_mat = img->MakeCvImage(CV_16UC1);
         build_lcm_image_message(
             image_mat, CV_16UC1, false,
-            robotlocomotion::image_t::PIXEL_FORMAT_DEPTH,
+            drake::lcmt_image::PIXEL_FORMAT_DEPTH,
             // TODO(duy): It should be float but why float does
             // not work with Linemod?
-            robotlocomotion::image_t::CHANNEL_TYPE_UINT16,
-            robotlocomotion::image_t::COMPRESSION_METHOD_ZLIB, &image);
+            drake::lcmt_image::CHANNEL_TYPE_UINT16,
+            drake::lcmt_image::COMPRESSION_METHOD_ZLIB, &image);
         break;
       }
       case ImageType::IR:
@@ -211,9 +210,9 @@ void LcmRgbdPublisher::PublishImages() {
         cv::Mat image_mat = img->MakeCvImage(CV_16UC1);
         build_lcm_image_message(
             image_mat, CV_16UC1, false,
-            robotlocomotion::image_t::PIXEL_FORMAT_GRAY,
-            robotlocomotion::image_t::CHANNEL_TYPE_UINT16,
-            robotlocomotion::image_t::COMPRESSION_METHOD_PNG, &image);
+            drake::lcmt_image::PIXEL_FORMAT_GRAY,
+            drake::lcmt_image::CHANNEL_TYPE_UINT16,
+            drake::lcmt_image::COMPRESSION_METHOD_PNG, &image);
         break;
       }
     }
@@ -234,23 +233,23 @@ void LcmRgbdPublisher::PublishImages() {
           DoRegisterDepthToColor(color_intrinsics, depth_intrinsics,
                                  X_rgb_depth, *color_image, *depth_image,
                                  ImageType::DEPTH);
-      images.images.push_back(robotlocomotion::image_t());
-      robotlocomotion::image_t& image = images.images.back();
+      images.images.push_back(drake::lcmt_image());
+      drake::lcmt_image& image = images.images.back();
       build_lcm_image_header(
           image_seq_.at(ImageType::DEPTH), timestamp,
           ImageTypeToFrameName(ImageType::RECT_RGB_ALIGNED_DEPTH), &image);
       build_lcm_image_message(
           depth_registered.MakeCvImage(CV_16UC1), CV_16UC1, false,
-          robotlocomotion::image_t::PIXEL_FORMAT_DEPTH,
+          drake::lcmt_image::PIXEL_FORMAT_DEPTH,
           // TODO(duy): It should be float but why float does
           // not work with Linemod?
-          robotlocomotion::image_t::CHANNEL_TYPE_UINT16,
-          robotlocomotion::image_t::COMPRESSION_METHOD_PNG, &image);
+          drake::lcmt_image::CHANNEL_TYPE_UINT16,
+          drake::lcmt_image::COMPRESSION_METHOD_PNG, &image);
     }
   }
 
   images.num_images = images.images.size();
-  lcm_->publish<robotlocomotion::image_array_t>(lcm_channel_name_, &images);
+  lcm_->publish<drake::lcmt_image_array>(lcm_channel_name_, &images);
 }
 
 }  // namespace rs2_lcm

@@ -19,23 +19,4 @@ lcm_cc_library(
     tags = ["nolint"],
 )
 
-lcm_py_library(
-    name = "lcmtypes_rs2_py",
-    lcm_package = "rs2_lcm",
-    lcm_srcs = LCM_SRCS,
-    tags = ["nolint"],
-    deps = [
-        "@lcmtypes_robotlocomotion//:lcmtypes_robotlocomotion_py",
-    ],
-)
-
-lcm_java_library(
-    name = "lcmtypes_rs2_java",
-    lcm_package = "rs2_lcm",
-    lcm_srcs = LCM_SRCS,
-    deps = [
-        "@lcmtypes_robotlocomotion//:lcmtypes_robotlocomotion_java",
-    ],
-)
-
 add_lint_tests()
