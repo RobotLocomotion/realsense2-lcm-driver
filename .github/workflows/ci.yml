@@ -1,0 +1,28 @@
+name: Install dependencies and build
+on:
+  # By default, this workflow is not triggered when a PR is merged.
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+      - labeled
+      - unlabeled
+  push:
+    branches:
+      - "*"
+
+jobs:
+    compile:
+        name: Install dependencies and compile project
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+          - name: Install dependencies & build
+            run: |
+              # Install dependencies
+              ./install_dependencies.sh
+              # Build realsense lcm driver
+              bazel build //...
