@@ -11,7 +11,9 @@ on:
       - unlabeled
   push:
     branches:
-      - "*"
+      - master
+  schedule:
+    - cron: "0 6 * * *" # 6am everyday.
 
 jobs:
     compile:
