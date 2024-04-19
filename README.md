@@ -1,4 +1,4 @@
-# Contact-rich Manipulation
+# Realses2 Lcm Driver
 [![ci_badge](https://github.com/RobotLocomotion/realsense2-lcm-driver/actions/workflows/ci.yml/badge.svg)](https://github.com/RobotLocomotion/realsense2-lcm-driver/actions)
 
 ## Dependency installation
